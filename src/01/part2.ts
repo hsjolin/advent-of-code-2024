@@ -1,76 +1,42 @@
-import StringReader from "../utils/stringReader";
 import { Utils } from "../utils/utils";
 
 let answer = 0;
-interface Pair {
-  number1 : string,
-  number2 : string
-}
+let arr1:number[] = [];
+let arr2:number[] = [];
+const similarityDict = {};
 
-const numberStrings = [
-	'zero',
-	'one',
-	'two',
-	'three',
-	'four',
-	'five',
-	'six',
-	'seven',
-	'eight',
-	'nine',
-  ];  
-
-Utils.lineReader<Pair>(
+Utils.lineReader<string>(
   "src/01/input.txt",
-  /^.*$/,
+  /^([0-9]+)\s+([0-9]+)$/,
   (match) => {
-    const stringReader = new StringReader(match[0]);
-    stringReader.readUntil(_ => getNumberRight(stringReader) != null);
-    const number1 = getNumberRight(stringReader);
-    stringReader.position = match[0].length;
-    stringReader.readLeftUntil(_ => getNumberLeft(stringReader) != null);
-    const number2 = getNumberLeft(stringReader);
+    const num1 = parseInt(match[1]); 
+    const num2 = parseInt(match[2]); 
 
-    return {
-      number1: number1,
-      number2: number2
-    };
+    arr1.push(num1);
+    arr2.push(num2);
+
+    return "";
   },
-  (pairs) => {
-    for(let i = 0; i < pairs.length; i++) {
-      answer += parseInt(pairs[i].number1 + pairs[i].number2);
-    }
+  (_) => {
+    for (var i = 0; i < arr1.length; i++) {
+        const num2 = arr2[i];
+
+        const similarityCount = similarityDict[num2]
+            ? similarityDict[num2]
+            : 0;
     
-    console.log(`The sum is: ${answer}`);
+        similarityDict[num2] = similarityCount + 1;
+    }
+
+    for(var i =0; i < arr1.length; i++) {
+        const num1 = arr1[i];
+
+        const similarityCount = similarityDict[num1]
+            ? similarityDict[num1]
+            : 0;
+
+        answer += similarityCount * num1; 
+    }
+
+    console.log(`The answer is: ${answer}`);
   });
-
-function getNumberRight(stringReader: StringReader) : string {
-	const currentChar = stringReader.string[stringReader.position];
-	if (!isNaN(+currentChar)) {
-		return currentChar;
-	}
-
-	for(let i = 0; i < numberStrings.length; i++) {
-		if (stringReader.lookRight(numberStrings[i])) {
-			return i.toString();
-		}
-	}
-
-	return null;
-}
-
-function getNumberLeft(stringReader: StringReader) : string {
-	const currentChar = stringReader.string[stringReader.position];
-	if (!isNaN(+currentChar)) {
-		return currentChar;
-	}
-
-	for(let i = 0; i < numberStrings.length; i++) {
-		if (stringReader.lookLeft(numberStrings[i])) {
-			return i.toString();
-		}
-	}
-
-	return null;
-}
-

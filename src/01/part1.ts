@@ -1,33 +1,23 @@
-import StringReader from "../utils/stringReader";
 import { Utils } from "../utils/utils";
 
 let answer = 0;
-interface Pair {
-  number1 : string,
-  number2 : string
-}
+let arr1:number[] = [];
+let arr2:number[] = [];
 
-Utils.lineReader<Pair>(
+Utils.lineReader<string>(
   "src/01/input.txt",
-  /^.*$/,
+  /^([0-9]+)\s+([0-9]+)$/,
   (match) => {
-    const stringReader = new StringReader(match[0]);
-    stringReader.position = -1;
-    stringReader.position = stringReader.searchRight(char => !isNaN(+char));
-    const number1 = stringReader.read(1);
-    stringReader.position = match[0].length;
-    stringReader.position = stringReader.searchLeft(char => !isNaN(+char));
-    const number2 = stringReader.read(1);
-
-    return {
-      number1: number1,
-      number2: number2
-    };
+    arr1.push(parseInt(match[1]));
+    arr2.push(parseInt(match[2]));
+    return "";
   },
-  (pairs) => {
-    for(let i = 0; i < pairs.length; i++) {
-      answer += parseInt(pairs[i].number1 + pairs[i].number2);
+  (_) => {
+    arr1.sort();
+    arr2.sort();
+
+    for (var i = 0; i < arr1.length; i++) {
+        answer += Math.abs(arr1[i] - arr2[i]);
     }
-    
-    console.log(`The sum is: ${answer}`);
+    console.log(`The answer is: ${answer}`);
   });
