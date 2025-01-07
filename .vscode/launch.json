@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "runeberg-to-html",
+            "program": "${workspaceFolder}/built/runeberg-to-html/part1.js",
+            "request": "launch",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "skipFiles": [
+                "node_modules/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "#1 - part1",
             "program": "${workspaceFolder}/built/01/part1.js",
             "request": "launch",
